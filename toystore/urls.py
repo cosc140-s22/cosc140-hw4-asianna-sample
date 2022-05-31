@@ -14,8 +14,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.shortcuts import redirect
 from django.urls import path, include, reverse_lazy
+from products.views import index, show
+from django.conf import settings
+from django.conf.urls.static import static
+
+def root_redirect(request):
+    return redirect(reverse_lazy('index'))
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-]
+    path('products/', index, name='index'),
+    path('products/<int:product_id>', show, name='show'),
+    path('', root_redirect),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
